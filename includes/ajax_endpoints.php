@@ -11,6 +11,7 @@ function get_jobs() {
     // Get the filter from the request
     $filters = isset($_POST['filters']) ? json_decode(stripslashes($_POST['filters']), true) : [];
     $paged = isset( $_POST['page'] ) ? intval( $_POST['page'] ) : 1;
+    $hide_expired = isset( $_POST['hide_expired'] ) ? intval( $_POST['hide_expired'] ) : 0;
 
     // Query posts
     $args = array(
@@ -32,6 +33,21 @@ function get_jobs() {
                 );
             }
         }
+    }
+
+    if($hide_expired == 1){
+        $meta_query = array('relation' => 'OR');
+        $meta_query[] = array(
+            'key' => '_job_expires',  // The meta key for the expiration date
+            'compare' => 'NOT EXISTS',   // Include jobs that don't have an expiry date
+        );
+        $meta_query[] =array(
+            'key' => '_job_expires',
+            'value' => date('Y-m-d'),    // Current date in Y-m-d format
+            'compare' => '>=',           // Exclude jobs where the expiry date is before today
+            'type' => 'DATE',            // Treat the value as a date
+        );
+        $args['meta_query'] = $meta_query;
     }
     if (count($tax_query) > 1) { 
         $args['tax_query'] = $tax_query;
@@ -55,7 +71,7 @@ function get_jobs() {
                 'job_industry' => get_the_terms( get_the_ID(), 'job_industry' ),
                 'job_experience_level' => get_the_terms( get_the_ID(), 'job_experience_level' ),
                 'featured_image' => get_the_post_thumbnail_url(get_the_ID(), 'full'),
-                'time' => human_time_diff(get_the_time('U'), current_time ('timestamp')) . ' ago'
+                'time' => human_time_diff(get_the_time('U'), current_time ('timestamp')) . ' ago',
             );
         }
     }

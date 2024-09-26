@@ -7,13 +7,17 @@
     let selectedFilters =  {};
     let currentPage = 1;
     let allFilters = {}
+    let hideExpired = false;
 
     async function fetchPosts(page = 1, append = false) {
        try {
           const formData = new FormData();
           formData.append('action', 'get_jobs'); // This matches the action set in WordPress
           formData.append('page', page);
-
+            if(hideExpired) {
+              formData.append('hide_expired', 1);
+            }
+        
           if (Object.keys(selectedFilters).length > 0) {
             formData.append('filters', JSON.stringify(selectedFilters));
           }
@@ -60,6 +64,10 @@
         }
         fetchPosts();
     }
+    function handleHide(){
+        hideExpired  = !hideExpired   
+        fetchPosts();
+    }
     // Fetch posts when component is mounted
     onMount(() => {
        fetchPosts();
@@ -72,7 +80,9 @@
 <Filter on:filterChange={handleFilterChange} data={allFilters.job_listing_type} tax="job_listing_type" label="Type"/>
 <Filter on:filterChange={handleFilterChange} data={allFilters.job_industry} tax="job_industry" label="Industry"/>
 <Filter on:filterChange={handleFilterChange} data={allFilters.job_experience_level} tax="job_experience_level" label="Experience level"/>
-
+<button on:click={handleHide}>
+    {hideExpired ?'Show Expired':'Hide Expired'}
+</button>
 {#each Object.keys(selectedFilters) as key}
     <div>{selectedFilters[key]}</div>
 {/each}
