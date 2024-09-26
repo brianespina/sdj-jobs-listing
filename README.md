@@ -1,4 +1,4 @@
-# svelte-wordpress-plugin
+# SDJ Jobs Listing
 
 ## Install dependencies
 
