@@ -64,10 +64,6 @@
         }
         fetchPosts();
     }
-    function handleHide(){
-        hideExpired  = !hideExpired   
-        fetchPosts();
-    }
     // Fetch posts when component is mounted
     onMount(() => {
        fetchPosts();
@@ -80,9 +76,10 @@
 <Filter on:filterChange={handleFilterChange} data={allFilters.job_listing_type} tax="job_listing_type" label="Type"/>
 <Filter on:filterChange={handleFilterChange} data={allFilters.job_industry} tax="job_industry" label="Industry"/>
 <Filter on:filterChange={handleFilterChange} data={allFilters.job_experience_level} tax="job_experience_level" label="Experience level"/>
-<button on:click={handleHide}>
-    {hideExpired ?'Show Expired':'Hide Expired'}
-</button>
+
+<input type="checkbox" bind:checked={hideExpired} on:change={fetchPosts}>
+<label>Hide Expired</label>
+
 {#each Object.keys(selectedFilters) as key}
     <div>{selectedFilters[key]}</div>
 {/each}
