@@ -10,6 +10,7 @@
     let hideExpired = false;
     let isLoading = true;
     let perPage = 10;
+    let total = 0;
 
     async function fetchPosts(page = 1, append = false, load = true) {
         isLoading = load;
@@ -39,6 +40,7 @@
                     posts = result.data.posts;
                 }
                 allFilters = result.data.taxonomy_counts;
+                total = parseInt(result.data.total);
             } else {
                 errorMessage = "Failed to fetch posts";
             }
@@ -124,7 +126,7 @@
         >
 
         {#each Object.keys(selectedFilters) as key}
-            {#if selectedFilters[key] !== ""}
+            {#if selectedFilters[key]}
                 <div>
                     {selectedFilters[key]}
                     <button on:click={() => removeFilter(key)}>x</button>
@@ -133,18 +135,15 @@
         {/each}
     </div>
     <div class="job-listing-loop">
+        {#if total}
+            {total} job{total !== 1 ? "s" : ""}
+        {/if}
         <select bind:value={perPage} on:change={fetchPosts}>
             <option value={10}>10</option>
-            <option value={11}>11</option>
             <option value={12}>12</option>
-            <option value={13}>13</option>
-            <option value={14}>14</option>
-            <option value={15}>15</option>
-            <option value={16}>16</option>
-            <option value={17}>17</option>
-            <option value={18}>18</option>
-            <option value={19}>19</option>
-            <option value={20}>20</option>
+            <option value={25}>25</option>
+            <option value={50}>50</option>
+            <option value={100}>100</option>
         </select>
 
         {#if isLoading}

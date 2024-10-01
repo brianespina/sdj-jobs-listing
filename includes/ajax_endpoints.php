@@ -55,6 +55,8 @@ function get_jobs() {
     }
 
     $posts = new WP_Query( $args );
+    $total = $posts->found_posts;
+
     // Prepare post data
     $post_data = array();
     if ( $posts->have_posts() ) {
@@ -115,6 +117,7 @@ function get_jobs() {
     wp_send_json_success(array(
         'posts' => $post_data,
         'taxonomy_counts' => $taxonomy_counts,
+        'total' => $total,
     ));
     wp_die();
 }
