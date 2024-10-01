@@ -98,8 +98,13 @@
     label="Experience level"
 />
 
-<input type="checkbox" bind:checked={hideExpired} on:change={fetchPosts} />
-<label>Hide Expired</label>
+<input
+    id="expired"
+    type="checkbox"
+    bind:checked={hideExpired}
+    on:change={fetchPosts}
+/>
+<label for="expired">Hide Expired</label>
 
 {#each Object.keys(selectedFilters) as key}
     <div>{selectedFilters[key]}</div>
