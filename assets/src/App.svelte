@@ -9,6 +9,7 @@
     let allFilters = {};
     let hideExpired = false;
     let isLoading = true;
+    let perPage = 10;
 
     async function fetchPosts(page = 1, append = false) {
         isLoading = true;
@@ -16,6 +17,8 @@
             const formData = new FormData();
             formData.append("action", "get_jobs"); // This matches the action set in WordPress
             formData.append("page", page);
+            formData.append("per_page", perPage);
+
             if (hideExpired) {
                 formData.append("hide_expired", 1);
             }
@@ -114,6 +117,19 @@
         {/each}
     </div>
     <div>
+        <select bind:value={perPage} on:change={fetchPosts}>
+            <option value={10}>10</option>
+            <option value={11}>11</option>
+            <option value={12}>12</option>
+            <option value={13}>13</option>
+            <option value={14}>14</option>
+            <option value={15}>15</option>
+            <option value={16}>16</option>
+            <option value={17}>17</option>
+            <option value={18}>18</option>
+            <option value={19}>19</option>
+            <option value={20}>20</option>
+        </select>
         {#if isLoading}
             Loading...
         {:else if posts.length > 0}

@@ -12,11 +12,12 @@ function get_jobs() {
     $filters = isset($_POST['filters']) ? json_decode(stripslashes($_POST['filters']), true) : [];
     $paged = isset( $_POST['page'] ) ? intval( $_POST['page'] ) : 1;
     $hide_expired = isset( $_POST['hide_expired'] ) ? intval( $_POST['hide_expired'] ) : 0;
+    $posts_per_page = isset( $_POST['per_page'] ) ? intval( $_POST['per_page'] ) : 10;
 
     // Query posts
     $args = array(
         'post_type' => 'job_listing',
-        'posts_per_page' => 10, // Number of posts you want to return
+        'posts_per_page' => $posts_per_page, // Number of posts you want to return
         'paged' => $paged,
     );
 
