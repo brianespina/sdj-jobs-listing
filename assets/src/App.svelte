@@ -11,8 +11,8 @@
     let isLoading = true;
     let perPage = 10;
 
-    async function fetchPosts(page = 1, append = false) {
-        isLoading = true;
+    async function fetchPosts(page = 1, append = false, load = true) {
+        isLoading = load;
         try {
             const formData = new FormData();
             formData.append("action", "get_jobs"); // This matches the action set in WordPress
@@ -48,10 +48,10 @@
         isLoading = false;
     }
 
-    // Load more posts when user clicks "Load More" button
+    // Load more posts when user clicks "Load More" button12
     function loadMore() {
         currentPage += 1;
-        fetchPosts(currentPage, true);
+        fetchPosts(currentPage, true, false);
     }
 
     function handleFilterChange(e) {
@@ -116,7 +116,7 @@
             <div>{selectedFilters[key]}</div>
         {/each}
     </div>
-    <div>
+    <div class="job-listing-loop">
         <select bind:value={perPage} on:change={fetchPosts}>
             <option value={10}>10</option>
             <option value={11}>11</option>
@@ -130,6 +130,7 @@
             <option value={19}>19</option>
             <option value={20}>20</option>
         </select>
+
         {#if isLoading}
             Loading...
         {:else if posts.length > 0}
@@ -171,14 +172,21 @@
 
 <style>
     .job-listing {
-        display: flex;
-        gap: 30px;
+        display: grid;
+        grid-template-columns: 1fr 2fr; /* Define a 30% column and a 70% column */
+        gap: 30px; /* Space between the columns */
+        width: 100%;
     }
+
     .job-filters {
-        flex-basis: 30%;
+        padding: 20px;
         display: flex;
         flex-direction: column;
         gap: 15px;
-        padding: 20px;
+        box-sizing: border-box; /* Ensure padding is included in the element's width */
+    }
+
+    .job-listing-loop {
+        box-sizing: border-box; /* Ensure content fits within the specified width */
     }
 </style>
