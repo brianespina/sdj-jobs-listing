@@ -4,6 +4,7 @@
     export let data = {};
     export let label = "";
     export let tax = "";
+    export let val = "";
 
     const dispatch = createEventDispatcher();
     let selectedFilter = "";
@@ -18,7 +19,7 @@
     }
 </script>
 
-<select on:change={handleChange}>
+<select on:change={handleChange} bind:value={val}>
     <option value="">{label}</option>
     {#if Object.keys(data).length > 0}
         {#each Object.entries(data) as [key, count]}

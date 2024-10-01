@@ -69,6 +69,13 @@
         }
         fetchPosts();
     }
+    function removeFilter(key) {
+        selectedFilters = {
+            ...selectedFilters,
+            [key]: "",
+        };
+        fetchPosts();
+    }
     // Fetch posts when component is mounted
     onMount(() => {
         fetchPosts();
@@ -82,24 +89,28 @@
             data={allFilters.country}
             tax="country"
             label="Country"
+            bind:val={selectedFilters["country"]}
         />
         <Filter
             on:filterChange={handleFilterChange}
             data={allFilters.job_listing_type}
             tax="job_listing_type"
             label="Type"
+            bind:val={selectedFilters["job_listing_type"]}
         />
         <Filter
             on:filterChange={handleFilterChange}
             data={allFilters.job_industry}
             tax="job_industry"
             label="Industry"
+            bind:val={selectedFilters["job_industry"]}
         />
         <Filter
             on:filterChange={handleFilterChange}
             data={allFilters.job_experience_level}
             tax="job_experience_level"
             label="Experience level"
+            bind:val={selectedFilters["job_experience_level"]}
         />
 
         <label for="expired"
@@ -113,7 +124,12 @@
         >
 
         {#each Object.keys(selectedFilters) as key}
-            <div>{selectedFilters[key]}</div>
+            {#if selectedFilters[key] !== ""}
+                <div>
+                    {selectedFilters[key]}
+                    <button on:click={() => removeFilter(key)}>x</button>
+                </div>
+            {/if}
         {/each}
     </div>
     <div class="job-listing-loop">
