@@ -72,77 +72,97 @@
     });
 </script>
 
-<!-- Display Posts -->
-<Filter
-    on:filterChange={handleFilterChange}
-    data={allFilters.country}
-    tax="country"
-    label="Country"
-/>
-<Filter
-    on:filterChange={handleFilterChange}
-    data={allFilters.job_listing_type}
-    tax="job_listing_type"
-    label="Type"
-/>
-<Filter
-    on:filterChange={handleFilterChange}
-    data={allFilters.job_industry}
-    tax="job_industry"
-    label="Industry"
-/>
-<Filter
-    on:filterChange={handleFilterChange}
-    data={allFilters.job_experience_level}
-    tax="job_experience_level"
-    label="Experience level"
-/>
+<section class="job-listing">
+    <div class="job-filters">
+        <Filter
+            on:filterChange={handleFilterChange}
+            data={allFilters.country}
+            tax="country"
+            label="Country"
+        />
+        <Filter
+            on:filterChange={handleFilterChange}
+            data={allFilters.job_listing_type}
+            tax="job_listing_type"
+            label="Type"
+        />
+        <Filter
+            on:filterChange={handleFilterChange}
+            data={allFilters.job_industry}
+            tax="job_industry"
+            label="Industry"
+        />
+        <Filter
+            on:filterChange={handleFilterChange}
+            data={allFilters.job_experience_level}
+            tax="job_experience_level"
+            label="Experience level"
+        />
 
-<input
-    id="expired"
-    type="checkbox"
-    bind:checked={hideExpired}
-    on:change={fetchPosts}
-/>
-<label for="expired">Hide Expired</label>
+        <label for="expired"
+            ><input
+                id="expired"
+                type="checkbox"
+                bind:checked={hideExpired}
+                on:change={fetchPosts}
+            />
+            Hide Expired</label
+        >
 
-{#each Object.keys(selectedFilters) as key}
-    <div>{selectedFilters[key]}</div>
-{/each}
-
-{#if isLoading}
-    Loading...
-{:else if posts.length > 0}
-    <ul>
-        {#each posts as post}
-            <li>
-                <a href={post.permalink}>{post.company_name}</a>
-                <div>{post.job_location}</div>
-                <div>
-                    {post.type && post.type.length > 0
-                        ? post.type[0].name
-                        : "N/A"}
-                </div>
-                <div>
-                    {post.country && post.country.length > 0
-                        ? post.country[0].name
-                        : "N/A"}
-                </div>
-                <div>
-                    {post.job_industry && post.job_industry.length > 0
-                        ? post.job_industry[0].name
-                        : "N/A"}
-                </div>
-                <div>
-                    {post.job_experience_level &&
-                    post.job_experience_level.length > 0
-                        ? post.job_experience_level[0].name
-                        : "N/A"}
-                </div>
-                <div>{post.time}</div>
-                <img alt="The project logo" src={post.featured_image} />
-            </li>
+        {#each Object.keys(selectedFilters) as key}
+            <div>{selectedFilters[key]}</div>
         {/each}
-    </ul>
-    <button on:click={loadMore}> Load More </button>
-{/if}
+    </div>
+    <div>
+        {#if isLoading}
+            Loading...
+        {:else if posts.length > 0}
+            <ul>
+                {#each posts as post}
+                    <li>
+                        <a href={post.permalink}>{post.company_name}</a>
+                        <div>{post.job_location}</div>
+                        <div>
+                            {post.type && post.type.length > 0
+                                ? post.type[0].name
+                                : "N/A"}
+                        </div>
+                        <div>
+                            {post.country && post.country.length > 0
+                                ? post.country[0].name
+                                : "N/A"}
+                        </div>
+                        <div>
+                            {post.job_industry && post.job_industry.length > 0
+                                ? post.job_industry[0].name
+                                : "N/A"}
+                        </div>
+                        <div>
+                            {post.job_experience_level &&
+                            post.job_experience_level.length > 0
+                                ? post.job_experience_level[0].name
+                                : "N/A"}
+                        </div>
+                        <div>{post.time}</div>
+                        <img alt="The project logo" src={post.featured_image} />
+                    </li>
+                {/each}
+            </ul>
+            <button on:click={loadMore}> Load More </button>
+        {/if}
+    </div>
+</section>
+
+<style>
+    .job-listing {
+        display: flex;
+        gap: 30px;
+    }
+    .job-filters {
+        flex-basis: 30%;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        padding: 20px;
+    }
+</style>

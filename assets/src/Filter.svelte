@@ -6,7 +6,6 @@
     export let tax = "";
 
     const dispatch = createEventDispatcher();
-    let errorMessage = "";
     let selectedFilter = "";
 
     function handleChange(e) {
@@ -19,14 +18,11 @@
     }
 </script>
 
-{#if Object.keys(data).length > 0}
-    <select on:change={handleChange}>
-        <option value="">{label}</option>
+<select on:change={handleChange}>
+    <option value="">{label}</option>
+    {#if Object.keys(data).length > 0}
         {#each Object.entries(data) as [key, count]}
             <option value={key} disabled={count === 0}>{key} ({count})</option>
         {/each}
-    </select>
-{:else}
-    <p>{errorMessage || "No filters available."}</p>
-{/if}
-
+    {/if}
+</select>
