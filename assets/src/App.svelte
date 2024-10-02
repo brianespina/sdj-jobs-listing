@@ -13,6 +13,8 @@
     let perPage = 10;
     let total = 0;
 
+    $: lastPage = Math.ceil(total / perPage) === currentPage;
+
     async function fetchPosts(page = 1, append = false, load = true) {
         isLoading = load;
         try {
@@ -162,10 +164,12 @@
                 {#each posts as post}
                     <li>
                         <div class="company-image">
-                            <img
-                                alt="The project logo"
-                                src={post.featured_image}
-                            />
+                            {#if post.featured_image}
+                                <img
+                                    alt="The project logo"
+                                    src={post.featured_image}
+                                />
+                            {/if}
                         </div>
                         <div class="job-content">
                             <div>
@@ -204,7 +208,9 @@
                     </li>
                 {/each}
             </ul>
-            <button on:click={loadMore}> Load More </button>
+            <button on:click={loadMore} class:dissable={lastPage}>
+                Load More
+            </button>
         {/if}
     </div>
 </section>
@@ -212,17 +218,22 @@
 <style>
     .job-listing {
         display: grid;
-        grid-template-columns: 1fr 2fr; /* Define a 30% column and a 70% column */
-        gap: 30px; /* Space between the columns */
+        grid-template-columns: 1fr 4fr; /* Define a 30% column and a 70% column */
+        gap: 50px; /* Space between the columns */
         width: 100%;
     }
 
     .job-filters {
-        padding: 20px;
+        padding-inline: 30px;
+        padding-block: 60px;
         display: flex;
         flex-direction: column;
         gap: 15px;
         box-sizing: border-box; /* Ensure padding is included in the element's width */
+        border: 2px solid var(--base);
+        border-radius: var(--radius-m);
+        align-self: start;
+        margin-top: 45px;
     }
 
     .job-listing-loop {
@@ -285,5 +296,9 @@
     }
     .time {
         color: var(--primary);
+    }
+    button.dissable {
+        pointer-events: none;
+        opacity: 0.4;
     }
 </style>
