@@ -259,7 +259,11 @@
                         <Loader />
                     </div>
                 {/if}
-                <button on:click={loadMore} class:dissable={lastPage}>
+                <button
+                    class="ct-link-button text--uppercase btn--primary"
+                    on:click={loadMore}
+                    class:dissable={lastPage}
+                >
                     Load More
                 </button>
             </div>
