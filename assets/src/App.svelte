@@ -12,11 +12,15 @@
     let isLoading = true;
     let perPage = 10;
     let total = 0;
+    let moreIsLoading = false;
 
     $: lastPage = Math.ceil(total / perPage) === currentPage;
 
     async function fetchPosts(page = 1, append = false, load = true) {
         isLoading = load;
+        if (!load) {
+            moreIsLoading = true;
+        }
         try {
             const formData = new FormData();
             formData.append("action", "get_jobs"); // This matches the action set in WordPress
@@ -51,6 +55,7 @@
             errorMessage = "An error occurred: " + error.message;
         }
         isLoading = false;
+        moreIsLoading = false;
     }
 
     // Load more posts when user clicks "Load More" button12
@@ -173,11 +178,29 @@
                         </div>
                         <div class="job-content">
                             <div>
-                                <h2 class="title">{post.title}</h2>
-                                <div class="location">{post.company_name}</div>
+                                <h2 class="title">{@html post.title}</h2>
+                                <div class="location">
+                                    {@html post.company_name}
+                                </div>
                             </div>
-                            <div>{post.job_location}</div>
                             <div>
+                                <img
+                                    id="image-298-37-1"
+                                    alt="job location"
+                                    src="/wp-content/uploads/2022/11/location-icon.svg"
+                                    class="ct-image"
+                                    data-id="image-298-37"
+                                />
+                                {@html post.job_location}
+                            </div>
+                            <div>
+                                <img
+                                    id="image-440-37-1"
+                                    alt="industry"
+                                    src="/wp-content/uploads/2022/11/industry-icon-black.svg"
+                                    class="ct-image"
+                                    data-id="image-440-37"
+                                />
                                 {post.job_industry &&
                                 post.job_industry.length > 0
                                     ? post.job_industry[0].name
@@ -185,11 +208,25 @@
                             </div>
                             <div class="job-details">
                                 <div>
+                                    <img
+                                        id="image-455-37-1"
+                                        alt="job type"
+                                        src="/wp-content/uploads/2022/11/briefacase-icon.svg"
+                                        class="ct-image"
+                                        data-id="image-455-37"
+                                    />
                                     {post.type && post.type.length > 0
                                         ? post.type[0].name
                                         : "N/A"}
                                 </div>
                                 <div>
+                                    <img
+                                        id="image-470-37-3"
+                                        alt="job level"
+                                        src="/wp-content/uploads/2022/11/star-icon.svg"
+                                        class="ct-image"
+                                        data-id="image-470-37"
+                                    />
                                     {post.job_experience_level &&
                                     post.job_experience_level.length > 0
                                         ? post.job_experience_level[0].name
@@ -198,7 +235,15 @@
                             </div>
                         </div>
                         <div class="job-footer">
-                            <div class="time">{post.time}</div>
+                            <div class="time">
+                                <img
+                                    id="image-748-37-3"
+                                    alt="posted"
+                                    src="/wp-content/uploads/2022/11/clock-icon-blue.svg"
+                                    class="ct-image"
+                                    data-id="image-748-37"
+                                />{post.time}
+                            </div>
                             <a
                                 href={post.permalink}
                                 class="ct-link-button text--uppercase btn--primary"
@@ -208,9 +253,16 @@
                     </li>
                 {/each}
             </ul>
-            <button on:click={loadMore} class:dissable={lastPage}>
-                Load More
-            </button>
+            <div class="load-more">
+                {#if moreIsLoading}
+                    <div class="loader">
+                        <Loader />
+                    </div>
+                {/if}
+                <button on:click={loadMore} class:dissable={lastPage}>
+                    Load More
+                </button>
+            </div>
         {/if}
     </div>
 </section>
@@ -221,6 +273,10 @@
         grid-template-columns: 1fr 4fr; /* Define a 30% column and a 70% column */
         gap: 50px; /* Space between the columns */
         width: 100%;
+    }
+
+    .job-listing img {
+        margin-right: 8px;
     }
 
     .job-filters {
@@ -238,6 +294,17 @@
 
     .job-listing-loop {
         box-sizing: border-box; /* Ensure content fits within the specified width */
+    }
+
+    .load-more {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .load-more .loader {
+        padding: 20px;
     }
 
     ul {
