@@ -1,6 +1,7 @@
 <script>
     import { onMount } from "svelte";
     import Filter from "./Filter.svelte";
+    import Loader from "./loader.svelte";
 
     let posts = [];
     let errorMessage = "";
@@ -135,48 +136,71 @@
         {/each}
     </div>
     <div class="job-listing-loop">
-        {#if total}
-            {total} job{total !== 1 ? "s" : ""}
-        {/if}
-        <select bind:value={perPage} on:change={fetchPosts}>
-            <option value={10}>10</option>
-            <option value={12}>12</option>
-            <option value={25}>25</option>
-            <option value={50}>50</option>
-            <option value={100}>100</option>
-        </select>
-
+        <div class="job-listing-heading">
+            <div>
+                {#if total}
+                    {total} Job{total !== 1 ? "s" : ""}
+                {/if}
+            </div>
+            <div>
+                Display
+                <select bind:value={perPage} on:change={fetchPosts}>
+                    <option value={10}>10</option>
+                    <option value={12}>12</option>
+                    <option value={25}>25</option>
+                    <option value={50}>50</option>
+                    <option value={100}>100</option>
+                </select>
+            </div>
+        </div>
         {#if isLoading}
-            Loading...
+            <div class="loader">
+                <Loader />
+            </div>
         {:else if posts.length > 0}
             <ul>
                 {#each posts as post}
                     <li>
-                        <a href={post.permalink}>{post.company_name}</a>
-                        <div>{post.job_location}</div>
-                        <div>
-                            {post.type && post.type.length > 0
-                                ? post.type[0].name
-                                : "N/A"}
+                        <div class="company-image">
+                            <img
+                                alt="The project logo"
+                                src={post.featured_image}
+                            />
                         </div>
-                        <div>
-                            {post.country && post.country.length > 0
-                                ? post.country[0].name
-                                : "N/A"}
+                        <div class="job-content">
+                            <div>
+                                <h2 class="title">{post.title}</h2>
+                                <div class="location">{post.company_name}</div>
+                            </div>
+                            <div>{post.job_location}</div>
+                            <div>
+                                {post.job_industry &&
+                                post.job_industry.length > 0
+                                    ? post.job_industry[0].name
+                                    : "N/A"}
+                            </div>
+                            <div class="job-details">
+                                <div>
+                                    {post.type && post.type.length > 0
+                                        ? post.type[0].name
+                                        : "N/A"}
+                                </div>
+                                <div>
+                                    {post.job_experience_level &&
+                                    post.job_experience_level.length > 0
+                                        ? post.job_experience_level[0].name
+                                        : "N/A"}
+                                </div>
+                            </div>
                         </div>
-                        <div>
-                            {post.job_industry && post.job_industry.length > 0
-                                ? post.job_industry[0].name
-                                : "N/A"}
+                        <div class="job-footer">
+                            <div class="time">{post.time}</div>
+                            <a
+                                href={post.permalink}
+                                class="ct-link-button text--uppercase btn--primary"
+                                >Show Details</a
+                            >
                         </div>
-                        <div>
-                            {post.job_experience_level &&
-                            post.job_experience_level.length > 0
-                                ? post.job_experience_level[0].name
-                                : "N/A"}
-                        </div>
-                        <div>{post.time}</div>
-                        <img alt="The project logo" src={post.featured_image} />
                     </li>
                 {/each}
             </ul>
@@ -203,5 +227,63 @@
 
     .job-listing-loop {
         box-sizing: border-box; /* Ensure content fits within the specified width */
+    }
+
+    ul {
+        list-style: none;
+        padding: 0;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+
+    li {
+        background: #fff;
+        border: solid thin var(--shade-light);
+        border-radius: var(--radius-m);
+        padding: 30px;
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+        grid-template-rows: 1fr;
+        gap: 30px;
+        font-family: "Nunito Sans";
+        font-size: var(--text-s);
+    }
+
+    .job-content {
+        grid-column: 2/4;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+    .job-footer {
+        grid-column: 4/6;
+        display: flex;
+        flex-direction: column;
+        align-items: end;
+        justify-content: space-between;
+    }
+    .job-details {
+        display: flex;
+        gap: 30px;
+    }
+    .job-listing-heading {
+        display: flex;
+        justify-content: space-between;
+    }
+    .loader {
+        width: 100px;
+        margin: auto;
+        padding-top: 80px;
+    }
+    .title {
+        font-family: "DM Sans";
+        font-size: 2.2rem;
+    }
+    .location {
+        font-size: var(--text-s);
+    }
+    .time {
+        color: var(--primary);
     }
 </style>
