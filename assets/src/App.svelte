@@ -8,7 +8,7 @@
     let selectedFilters = {};
     let currentPage = 1;
     let allFilters = {};
-    let hideExpired = false;
+    let showExpired = false;
     let isLoading = true;
     let perPage = 10;
     let total = 0;
@@ -35,8 +35,8 @@
             formData.append("page", page);
             formData.append("per_page", perPage);
 
-            if (hideExpired) {
-                formData.append("hide_expired", 1);
+            if (showExpired) {
+                formData.append("show_expired", 1);
             }
 
             if (Object.keys(selectedFilters).length > 0) {
@@ -94,7 +94,7 @@
             ...selectedFilters,
             [key]: "",
         };
-        fetchPosts();
+        fetchPosts(currentPage);
     }
     // Fetch posts when component is mounted
     onMount(() => {
@@ -144,10 +144,10 @@
             ><input
                 id="expired"
                 type="checkbox"
-                bind:checked={hideExpired}
-                on:change={fetchPosts}
+                bind:checked={showExpired}
+                on:change={() => fetchPosts(1)}
             />
-            Hide Expired</label
+            Show Expired</label
         >
 
         <div class="active-filters">

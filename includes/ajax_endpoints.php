@@ -11,7 +11,7 @@ function get_jobs()
     // Get the filter from the request
     $filters = isset($_POST['filters']) ? json_decode(stripslashes($_POST['filters']), true) : [];
     $paged = isset($_POST['page']) ? intval($_POST['page']) : 1;
-    $hide_expired = isset($_POST['hide_expired']) ? intval($_POST['hide_expired']) : 0;
+    $showX = isset($_POST['show_expired']) ? intval($_POST['show_expired']) : 0;
     $posts_per_page = isset($_POST['per_page']) ? intval($_POST['per_page']) : 10;
 
 
@@ -38,7 +38,7 @@ function get_jobs()
         }
     }
 
-    if ($hide_expired == 1) {
+    if ($showX != 1) {
         $meta_query = array('relation' => 'OR');
         $meta_query[] = array(
             'key' => '_job_expires',  // The meta key for the expiration date
