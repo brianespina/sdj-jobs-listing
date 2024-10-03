@@ -75,7 +75,6 @@
     function handleFilterChange(e) {
         if (e.detail.value === "") {
             if (e.detail.tax in selectedFilters) {
-                console.log("in");
                 let temp = { ...selectedFilters };
                 delete temp[e.detail.tax];
                 selectedFilters = temp;
@@ -97,7 +96,6 @@
     }
     // Fetch posts when component is mounted
     onMount(() => {
-        console.log(selectedFilters);
         if (path[0] === "country") {
             isPrePop = true;
             selectedFilters = {
