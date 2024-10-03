@@ -15,7 +15,7 @@
         let payload = {
             tax: tax,
             value: selectedFilter,
-            name: data[selectedFilter].name,
+            name: data[selectedFilter] ? data[selectedFilter].name : "",
         };
         dispatch("filterChange", payload);
     }

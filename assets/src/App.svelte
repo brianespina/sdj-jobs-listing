@@ -75,6 +75,7 @@
     function handleFilterChange(e) {
         if (e.detail.value === "") {
             if (e.detail.tax in selectedFilters) {
+                console.log("in");
                 let temp = { ...selectedFilters };
                 delete temp[e.detail.tax];
                 selectedFilters = temp;
