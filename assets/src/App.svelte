@@ -96,6 +96,7 @@
     }
     // Fetch posts when component is mounted
     onMount(() => {
+        console.log(selectedFilters);
         if (path[0] === "country") {
             isPrePop = true;
             selectedFilters = {
@@ -138,7 +139,7 @@
             bind:val={selectedFilters["job_experience_level"]}
         />
 
-        <label for="expired"
+        <label class="expired" for="expired"
             ><input
                 id="expired"
                 type="checkbox"
@@ -148,16 +149,17 @@
             Hide Expired</label
         >
 
-        {#each Object.keys(selectedFilters) as key}
-            {#if selectedFilters[key]}
-                {#if isPrePop && path[1] !== selectedFilters[key]}
-                    <div>
-                        {selectedFilters[key].name}
-                        <button on:click={() => removeFilter(key)}>x</button>
-                    </div>
+        <div class="active-filters">
+            {#each Object.keys(selectedFilters) as key}
+                {#if selectedFilters[key]}
+                    {#if path[1] !== selectedFilters[key]}
+                        <div on:click={() => removeFilter(key)}>
+                            {selectedFilters[key].name} <span>x</span>
+                        </div>
+                    {/if}
                 {/if}
-            {/if}
-        {/each}
+            {/each}
+        </div>
     </div>
     <div class="job-listing-loop">
         <div class="job-listing-heading">
@@ -291,9 +293,34 @@
 </section>
 
 <style>
+    .expired {
+        padding-top: 15px;
+        font-size: 16px;
+    }
+    .active-filters {
+        padding-top: 20px;
+    }
+    .active-filters div:hover {
+        background-color: var(--primary-light);
+    }
+    .active-filters div {
+        float: left;
+        margin-right: 10px;
+        margin-bottom: 10px;
+        cursor: pointer;
+        border-radius: var(--radius-l);
+        background: #e4e4e4;
+        color: var(--base);
+        font-size: var(--text-s);
+        padding: 8px 18px;
+    }
+    .active-filters div span {
+        font-size: 15px;
+        font-weight: 600;
+    }
     .job-listing {
         display: grid;
-        grid-template-columns: 1fr 4fr; /* Define a 30% column and a 70% column */
+        grid-template-columns: 2fr 5fr; /* Define a 30% column and a 70% column */
         gap: 50px; /* Space between the columns */
         width: 100%;
     }
@@ -306,6 +333,7 @@
     .job-filters {
         padding-inline: 30px;
         padding-block: 60px;
+        padding-bottom: 40px;
         display: flex;
         flex-direction: column;
         gap: 15px;
@@ -314,6 +342,7 @@
         border-radius: var(--radius-m);
         align-self: start;
         margin-top: 45px;
+        background: #fff;
     }
 
     .job-listing-loop {
