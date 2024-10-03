@@ -13,14 +13,22 @@
     let perPage = 10;
     let total = 0;
     let moreIsLoading = false;
+    let isPrePop = false;
 
     $: lastPage = Math.ceil(total / perPage) === currentPage;
+
+    let url = new URL(window.location.href);
+    let path = url.pathname
+        .trim()
+        .split("/")
+        .filter((i) => i);
 
     async function fetchPosts(page = 1, append = false, load = true) {
         isLoading = load;
         if (!load) {
             moreIsLoading = true;
         }
+
         try {
             const formData = new FormData();
             formData.append("action", "get_jobs"); // This matches the action set in WordPress
@@ -74,7 +82,7 @@
         } else {
             selectedFilters = {
                 ...selectedFilters,
-                [e.detail.tax]: e.detail.value,
+                [e.detail.tax]: { value: e.detail.value, name: e.detail.name },
             };
         }
         fetchPosts();
@@ -88,6 +96,12 @@
     }
     // Fetch posts when component is mounted
     onMount(() => {
+        if (path[0] === "country") {
+            isPrePop = true;
+            selectedFilters = {
+                country: path[1],
+            };
+        }
         fetchPosts();
     });
 </script>
@@ -100,6 +114,7 @@
             tax="country"
             label="Country"
             bind:val={selectedFilters["country"]}
+            {isPrePop}
         />
         <Filter
             on:filterChange={handleFilterChange}
@@ -135,10 +150,12 @@
 
         {#each Object.keys(selectedFilters) as key}
             {#if selectedFilters[key]}
-                <div>
-                    {selectedFilters[key]}
-                    <button on:click={() => removeFilter(key)}>x</button>
-                </div>
+                {#if isPrePop && path[1] !== selectedFilters[key]}
+                    <div>
+                        {selectedFilters[key].name}
+                        <button on:click={() => removeFilter(key)}>x</button>
+                    </div>
+                {/if}
             {/if}
         {/each}
     </div>
@@ -267,6 +284,8 @@
                     Load More
                 </button>
             </div>
+        {:else if posts.length === 0}
+            No Jobs Found
         {/if}
     </div>
 </section>
@@ -279,7 +298,8 @@
         width: 100%;
     }
 
-    .job-listing img {
+    .job-content img,
+    .job-footer img {
         margin-right: 8px;
     }
 
@@ -338,6 +358,7 @@
         flex-direction: column;
         gap: 10px;
     }
+
     .job-footer {
         grid-column: 4/6;
         display: flex;
@@ -345,31 +366,61 @@
         align-items: end;
         justify-content: space-between;
     }
+
     .job-details {
         display: flex;
         gap: 30px;
     }
+
     .job-listing-heading {
         display: flex;
         justify-content: space-between;
     }
+
     .loader {
         width: 100px;
         margin: auto;
         padding-top: 80px;
     }
+
     .title {
         font-family: "DM Sans";
         font-size: 2.2rem;
     }
+
     .location {
         font-size: var(--text-s);
     }
+
     .time {
         color: var(--primary);
     }
+
     button.dissable {
         pointer-events: none;
         opacity: 0.4;
+    }
+
+    @media (max-width: 1024px) {
+        .job-listing {
+            grid-template-columns: 1fr; /* Define a 30% column and a 70% column */
+            gap: 20px;
+        }
+        li {
+            grid-template-columns: 1fr;
+            grid-template-rows: auto;
+            gap: 10px;
+        }
+        .job-footer,
+        .job-content {
+            grid-column: 1;
+        }
+        .company-image {
+            max-width: 50px;
+        }
+        .job-footer {
+            gap: 20px;
+            align-items: start;
+        }
     }
 </style>
