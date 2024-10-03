@@ -88,13 +88,27 @@
         }
         fetchPosts();
     }
-    function removeFilter(key) {
+    function handleActiveFilterClick(key) {
         currentPage = 1;
+        removeFilterState(key);
+        fetchPosts();
+    }
+    function handleExpiredToggle() {
+        currentPage = 1;
+        fetchPosts();
+    }
+    function removeFilterState(key) {
         selectedFilters = {
             ...selectedFilters,
             [key]: "",
         };
-        fetchPosts(currentPage);
+    }
+    function reset() {
+        currentPage = 1;
+        Object.keys(selectedFilters).forEach((key) => {
+            removeFilterState(key);
+        });
+        fetchPosts();
     }
     // Fetch posts when component is mounted
     onMount(() => {
@@ -145,7 +159,7 @@
                 id="expired"
                 type="checkbox"
                 bind:checked={showExpired}
-                on:change={() => fetchPosts(1)}
+                on:change={() => handleExpiredToggle()}
             />
             Show Expired</label
         >
@@ -154,13 +168,19 @@
             {#each Object.keys(selectedFilters) as key}
                 {#if selectedFilters[key]}
                     {#if path[1] !== selectedFilters[key]}
-                        <div on:click={() => removeFilter(key)}>
+                        <div on:click={() => handleActiveFilterClick(key)}>
                             {selectedFilters[key].name} <span>x</span>
                         </div>
                     {/if}
                 {/if}
             {/each}
         </div>
+
+        <button
+            on:click={reset}
+            class="ct-link-button text--uppercase btn--primary"
+            >Reset Filters</button
+        >
     </div>
     <div class="job-listing-loop">
         <div class="job-listing-heading">
