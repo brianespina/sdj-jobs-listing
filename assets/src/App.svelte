@@ -73,6 +73,7 @@
     }
 
     function handleFilterChange(e) {
+        currentPage = 1;
         if (e.detail.value === "") {
             if (e.detail.tax in selectedFilters) {
                 let temp = { ...selectedFilters };
@@ -88,6 +89,7 @@
         fetchPosts();
     }
     function removeFilter(key) {
+        currentPage = 1;
         selectedFilters = {
             ...selectedFilters,
             [key]: "",
