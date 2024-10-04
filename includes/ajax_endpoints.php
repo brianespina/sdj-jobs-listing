@@ -95,6 +95,7 @@ function get_jobs()
 
         // For each term in this taxonomy, get the post count excluding the filter for this taxonomy
         foreach ($terms as $term) {
+            $args['paged'] = 1;
             $term_query = $args;
 
             // Modify the tax query to exclude the current taxonomy filter
