@@ -6,7 +6,7 @@ Plugin URI: https://www.servicedesignjobs.com/
 Description: A plugin for SDJ joblisting and filtering
 Author: Brian Espina
 Author URI: https://www.servicedesignjobs.com/
-Version: 1.0.1
+Version: 1.0.2
 */
 
 if (! defined('ABSPATH')) {
@@ -20,4 +20,3 @@ require_once(__DIR__ . '/includes/ajax_endpoints.php');
 if (class_exists('SvelteWP')) {
 	$svelteWP = new SvelteWP();
 }
-

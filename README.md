@@ -17,6 +17,15 @@ npm install
 
 # Change Log
 
+
+## Version 1.0.2
+### 10/04/24
+
+#### Hotfix
+- Fixed issue with load more button causing the filters to display wrong counts
+
+----
+
 ## Version 1.0.1
 ### 10/03/24
 
